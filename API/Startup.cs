@@ -48,6 +48,7 @@ namespace API
                 app.SeedDataContext();
             }
 
+            // middleware logging
             app.UseSerilogRequestLogging(options =>
             {
                 // Customize the message template
