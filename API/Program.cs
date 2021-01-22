@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using Serilog.Formatting.Compact;
 using Serilog.Formatting.Json;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,8 @@ namespace API
                   if (hostingContext.HostingEnvironment.IsDevelopment())
                   {
                       // We can only see the logs in the console if we're running in kestrel
-                      loggerConfiguration.WriteTo.Console(Serilog.Events.LogEventLevel.Verbose);
+                      //loggerConfiguration.WriteTo.Console(new JsonFormatter(),Serilog.Events.LogEventLevel.Verbose);
+                      loggerConfiguration.WriteTo.Console(Serilog.Events.LogEventLevel.Fatal);
                   }
               })
               .Build().Run();
