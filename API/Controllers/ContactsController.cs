@@ -34,6 +34,33 @@ namespace API.Controllers
             return Ok(await this.service.SearchContactsByNameAsync(nameFilter));
         }
 
+        // api/contacts/broken1
+        [Route("Broken1")]
+        [HttpGet]
+        public IActionResult BrokenAction1()
+        {
+            try
+            {
+                throw new Exception("Oops something went wrong");
+            }
+            catch (Exception ex)
+            {
+
+                this.logger.LogError(ex.Message);
+            }
+            
+            return Ok("We handled the error ");
+        }
+
+        // api/contacts/broken2
+        [Route("Broken2")]
+        [HttpGet]
+        public IActionResult BrokenAction2()
+        {
+            // this will be logged
+            throw new Exception("Unhandled exception");
+        }
+
         [Route(nameof(ContactsController.GetContactsLongProcess))]
         [HttpGet()]
         public async Task<ActionResult<IEnumerable<ContactViewModel>>> GetContactsLongProcess([FromQuery(Name = "name")] string nameFilter)/*Lets use name as the query key*/
