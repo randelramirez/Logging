@@ -3,6 +3,7 @@ using Core;
 using Core.ViewModels;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -14,15 +15,18 @@ namespace API.Controllers
     public class ContactsController : ControllerBase
     {
         private readonly IContactService service;
+        private readonly ILogger<ContactsController> logger;
 
-        public ContactsController(IContactService service)
+        public ContactsController(IContactService service, ILogger<ContactsController> logger)
         {
             this.service = service;
+            this.logger = logger;
         }
 
         [HttpGet()]
         public async Task<ActionResult<IEnumerable<ContactViewModel>>> GetContacts([FromQuery(Name = "name")] string nameFilter)/*Lets use name as the query key*/
         {
+            logger.LogInformation("Get contacts with filter: {nameFilter}", nameFilter);
             if (string.IsNullOrEmpty(nameFilter))
             {
                 return Ok(await this.service.GetAllAsync());
