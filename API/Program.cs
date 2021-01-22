@@ -21,7 +21,7 @@ namespace API
                   {
                       // We can only see the logs in the console if we're running in kestrel
                       //loggerConfiguration.WriteTo.Console(new JsonFormatter(),Serilog.Events.LogEventLevel.Verbose);
-                      loggerConfiguration.WriteTo.Console(Serilog.Events.LogEventLevel.Fatal);
+                      loggerConfiguration.WriteTo.Console(Serilog.Events.LogEventLevel.Verbose);
                   }
               })
               .Build().Run();

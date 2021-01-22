@@ -1,10 +1,10 @@
-﻿using Core;
-using Core.ViewModels;
+﻿using Core.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace API.Services
+namespace Core
 {
     public interface IContactService
     {

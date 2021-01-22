@@ -1,26 +1,31 @@
 ﻿using Core;
 using Core.ViewModels;
 using Microsoft.EntityFrameworkCore;
-using Persistence;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace API.Services
+namespace Persistence.Services
 {
     public class ContactService : IContactService
     {
         private readonly DataContext context;
+        private readonly ILogger<ContactService> logger;
 
-        public ContactService(DataContext context)
+        public ContactService(DataContext context, ILogger<ContactService> logger)
         {
             this.context = context;
+            this.logger = logger;
         }
 
         public async Task<IEnumerable<ContactViewModel>> GetAllAsync()
         {
-            return await this.context.Contacts.AsNoTracking().Select(c => new ContactViewModel() { Id = c.Id, Name = c.Name, Address = c.Address }).ToListAsync();
+            this.logger.LogInformation("Retreiving contacts");
+            var contacts = await this.context.Contacts.AsNoTracking().Select(c => new ContactViewModel() { Id = c.Id, Name = c.Name, Address = c.Address }).ToListAsync();
+            this.logger.LogInformation($"{contacts.Count} were retreived");
+            return contacts;
         }
 
         public async Task<ContactViewModel> GetAsync(Guid id)
