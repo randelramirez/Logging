@@ -1,6 +1,8 @@
 using Core;
+using Infrastructure.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -48,6 +50,31 @@ namespace API
                 app.UseDeveloperExceptionPage();
                 app.SeedDataContext();
             }
+
+            // This allows to create a response for unhandled exceptions
+            // Note: this also overrides UseDeveloperExceptionPage
+            app.UseApiExceptionHandler(options =>
+            {
+                //options.AddResponseDetails = UpdateApiErrorResponse;
+
+                options.AddResponseDetails = (context, ex, error) =>
+                {
+                    if (ex.GetType().Name == nameof(SqlException))
+                    {
+                        error.Detail = "Exception was a database exception!";
+                    }
+                    //error.Links = "https://gethelpformyerror.com/";
+                };
+            });
+
+            //static void UpdateApiErrorResponse(HttpContext context, Exception ex, ApiError error)
+            //{
+            //    if (ex.GetType().Name == nameof(SqlException))
+            //    {
+            //        error.Detail = "Exception was a database exception!";
+            //    }
+            //    //error.Links = "https://gethelpformyerror.com/";
+            //}
 
             // middleware logging
             app.UseSerilogRequestLogging(options =>
