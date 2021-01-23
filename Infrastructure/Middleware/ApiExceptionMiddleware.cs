@@ -9,27 +9,27 @@ namespace Infrastructure.Middleware
 {
     public class ApiExceptionMiddleware
     {
-        private readonly RequestDelegate _next;
-        private readonly ILogger<ApiExceptionMiddleware> _logger;
-        private readonly ApiExceptionOptions _options;
+        private readonly RequestDelegate next;
+        private readonly ILogger<ApiExceptionMiddleware> logger;
+        private readonly ApiExceptionOptions options;
 
         public ApiExceptionMiddleware(ApiExceptionOptions options, RequestDelegate next,
             ILogger<ApiExceptionMiddleware> logger)
         {
-            _next = next;
-            _logger = logger;
-            _options = options;
+            this.next = next;
+            this.logger = logger;
+            this.options = options;
         }
 
         public async Task Invoke(HttpContext context /* other dependencies */)
         {
             try
             {
-                await _next(context);
+                await next(context);
             }
             catch (Exception ex)
             {
-                await HandleExceptionAsync(context, ex, _options);
+                await HandleExceptionAsync(context, ex, options);
             }
         }
 
@@ -43,11 +43,12 @@ namespace Infrastructure.Middleware
                         "support team if the problem persists."
             };
 
+            // we setup AddResponseDetails on Startup.cs
             opts.AddResponseDetails?.Invoke(context, exception, error);
 
             var innerExMessage = GetInnermostExceptionMessage(exception);
 
-            _logger.LogError(exception, "BADNESS!!! " + innerExMessage + " -- {ErrorId}.", error.Id);
+            logger.LogError(exception, "ApiExceptionMiddleware!!! " + innerExMessage + " -- {ErrorId}.", error.Id);
 
             var result = JsonConvert.SerializeObject(error);
             context.Response.ContentType = "application/json";

@@ -23,5 +23,7 @@ namespace Core
         Task DeleteAsync(Guid contactId);
 
         Task<bool> IsExistingAsync(Guid contactId);
+
+        void ThrowSqlError();
     }
 }

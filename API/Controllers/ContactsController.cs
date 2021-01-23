@@ -2,6 +2,7 @@
 using Core.ViewModels;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -60,6 +61,16 @@ namespace API.Controllers
         {
             // this will be logged
             throw new Exception("Unhandled exception");
+        }
+
+        // api/contacts/broken2
+        [Route("SqlException")]
+        [HttpGet]
+        public IActionResult SqlException()
+        {
+            // this will be logged
+            this.service.ThrowSqlError();
+            return Ok();
         }
 
         [Route(nameof(ContactsController.GetContactsLongProcess))]

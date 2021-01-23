@@ -107,5 +107,11 @@ namespace Persistence.Services
             var contact = await this.context.Contacts.FindAsync(contactId);
             return contact != null;
         }
+
+        public void ThrowSqlError()
+        {
+            var x = this.context.Contacts.FromSqlRaw("EXECUTE dbo.FakeSP {0}", 1);
+            x.ToList(); // executes the command
+        }
     }
 }
