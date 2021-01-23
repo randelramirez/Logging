@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Infrastructure.Middleware
+﻿namespace Infrastructure.Middleware
 {
     public class ApiError
     {
