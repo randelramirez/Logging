@@ -26,6 +26,7 @@ namespace API.Controllers
         public async Task<ActionResult<IEnumerable<ContactViewModel>>> GetContacts([FromQuery(Name = "name")] string nameFilter)/*Lets use name as the query key*/
         {
             logger.LogInformation("Get contacts with filter: {nameFilter}", nameFilter);
+            logger.LogWarning("This should only appear if the log level is warning");
             if (string.IsNullOrEmpty(nameFilter))
             {
                 return Ok(await this.service.GetAllAsync());
