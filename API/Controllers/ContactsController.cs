@@ -26,7 +26,7 @@ namespace API.Controllers
         [HttpGet()]
         public async Task<ActionResult<IEnumerable<ContactViewModel>>> GetContacts([FromQuery(Name = "name")] string nameFilter)/*Lets use name as the query key*/
         {
-            // scopes allows us to put wrap the logs inside a scope
+            // scopes allows us to put wrap the logs inside a scope, logs made inside this scope will have a scopeIdentifier
             using (this.logger.BeginScope("Starting operation for request: {scopeIdentifier}}", this.HttpContext.TraceIdentifier))
             {
                 logger.LogInformation("Get contacts with filter: {nameFilter}", nameFilter);
@@ -44,6 +44,7 @@ namespace API.Controllers
         [HttpGet()]
         public async Task<ActionResult<IEnumerable<ContactViewModel>>> UseRawSql([FromQuery(Name = "name")] string nameFilter)/*Lets use name as the query key*/
         {
+            // scopes allows us to put wrap the logs inside a scope, logs made inside this scope will have a scopeIdentifier
             using (this.logger.BeginScope("Starting operation for request: {scopeIdentifier}}", this.HttpContext.TraceIdentifier))
             {
                 logger.LogInformation("Get contacts with filter: {nameFilter}", nameFilter);
