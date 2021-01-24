@@ -1,5 +1,6 @@
 ﻿using Core;
 using Core.ViewModels;
+using Infrastructure.Filters;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace API.Controllers
 {
+    [TypeFilter(typeof(TrackActionPerformanceFilter))]
     [Route("api/[controller]")]
     [ApiController]
     public class ContactsController : ControllerBase
