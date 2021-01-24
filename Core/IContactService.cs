@@ -25,5 +25,7 @@ namespace Core
         Task<bool> IsExistingAsync(Guid contactId);
 
         void ThrowSqlError();
+
+        Task<IEnumerable<ContactViewModel>> GetAllUsingSqlQuery();
     }
 }
