@@ -1,7 +1,9 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Json;
+using Serilog.Sinks.MSSqlServer;
 using System.IO;
 using System.Reflection;
 
@@ -19,6 +21,7 @@ namespace API
                       .Enrich.WithMachineName() // usefule for distributed/microservice 
                       .Enrich.WithProperty(nameof(Assembly), assembly.Name)
                       .Enrich.WithProperty("Version", assembly.Version)
+                      .WriteTo.MSSqlServer(hostingContext.Configuration.GetConnectionString("DataContext"), sinkOptions: GetMSSqlServerSinkOptions(), columnOptions: GetColumnOptions())
                       .MinimumLevel.Override("Microsoft", LogEventLevel.Warning) // minimize the logs that we see(we only show logs from MS namespace if warning and above)
                       .WriteTo.File(new JsonFormatter(), Path.Combine(Directory.GetCurrentDirectory(), "logs.json"), shared: true,
                           restrictedToMinimumLevel: LogEventLevel.Warning);  // this means any log level below Warning will not be displayed on the file (Warning level and above are shown)
@@ -37,6 +40,22 @@ namespace API
                 });
 
             return hostBuilder;
+        }
+
+        private static ColumnOptions GetColumnOptions()
+        {
+            var options = new ColumnOptions();
+            options.Level.ColumnName = "LogLevel";
+            options.Level.DataLength = -1;
+            return options;
+        }
+
+        private static MSSqlServerSinkOptions GetMSSqlServerSinkOptions()
+        {
+            var options = new MSSqlServerSinkOptions();
+            options.AutoCreateSqlTable = true;
+            options.TableName = "Logs";
+            return options;
         }
     }
 }
