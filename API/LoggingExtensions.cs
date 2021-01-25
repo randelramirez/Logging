@@ -2,12 +2,8 @@
 using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Json;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace API
 {
