@@ -2,6 +2,7 @@
 using Core.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Persistence.LoggerExtensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,8 +24,19 @@ namespace Persistence.Services
         public async Task<IEnumerable<ContactViewModel>> GetAllAsync()
         {
             this.logger.LogInformation("Retreiving contacts");
+            this.logger.LogGetAllContacts();
             var contacts = await this.context.Contacts.AsNoTracking().Select(c => new ContactViewModel() { Id = c.Id, Name = c.Name, Address = c.Address }).ToListAsync();
             this.logger.LogInformation($"{contacts.Count} were retreived");
+            return contacts;
+        }
+
+        public async Task<IEnumerable<ContactViewModel>> GetAllUsingSqlQuery()
+        {
+            var getAllContactsQuery = "SELECT * FROM Contacts";
+            this.logger.LogGetAllUsingRawSql(getAllContactsQuery);
+            var contacts = await this.context.Contacts.FromSqlRaw(getAllContactsQuery)
+                .Select(c => new ContactViewModel() { Id = c.Id, Name = c.Name, Address = c.Address })
+                .ToListAsync();
             return contacts;
         }
 
