@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
+using Serilog.Filters;
 using Serilog.Formatting.Json;
 using Serilog.Sinks.MSSqlServer;
 using System.IO;
@@ -24,6 +25,10 @@ namespace API
                       .WriteTo.MSSqlServer(hostingContext.Configuration.GetConnectionString("DataContext"), 
                         sinkOptions: GetMSSqlServerSinkOptions(), 
                         columnOptions: GetColumnOptions())
+                      .WriteTo.Logger(l => l.WriteTo.MSSqlServer(hostingContext.Configuration.GetConnectionString("DataContext"),
+                        sinkOptions: GetMSSqlServerSinkOptions2(),
+                        columnOptions: GetColumnOptions())
+                      .Filter.ByIncludingOnly(Matching.WithProperty("ErrorId"))) // see ApiExceptionMiddleware for ErrorId
                       .MinimumLevel.Override("Microsoft", LogEventLevel.Warning) // minimize the logs that we see(we only show logs from MS namespace if warning and above)
                       .WriteTo.File(new JsonFormatter(), Path.Combine(Directory.GetCurrentDirectory(), "logs.json"), shared: true,
                           restrictedToMinimumLevel: LogEventLevel.Warning);  // this means any log level below Warning will not be displayed on the file (Warning level and above are shown)
@@ -61,6 +66,15 @@ namespace API
             var options = new MSSqlServerSinkOptions();
             options.AutoCreateSqlTable = true;
             options.TableName = "Logs";
+            return options;
+        }
+
+        private static MSSqlServerSinkOptions GetMSSqlServerSinkOptions2()
+        {
+            // ONLY LOGS with ErrorId property will be logged
+            var options = new MSSqlServerSinkOptions();
+            options.AutoCreateSqlTable = true;
+            options.TableName = "LogsWithFilter";
             return options;
         }
     }
