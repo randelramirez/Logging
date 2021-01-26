@@ -28,7 +28,7 @@ namespace API
                       .WriteTo.Logger(l => l.WriteTo.MSSqlServer(hostingContext.Configuration.GetConnectionString("DataContext"),
                         sinkOptions: GetMSSqlServerSinkOptions2(),
                         columnOptions: GetColumnOptions())
-                      .Filter.ByIncludingOnly(Matching.WithProperty("ErrorId"))) // see ApiExceptionMiddleware for ErrorId
+                      .Filter.ByIncludingOnly(Matching.WithProperty("ErrorId"))) // see ApiExceptionMiddleware for {ErrorId}
                       .MinimumLevel.Override("Microsoft", LogEventLevel.Warning) // minimize the logs that we see(we only show logs from MS namespace if warning and above)
                       .WriteTo.File(new JsonFormatter(), Path.Combine(Directory.GetCurrentDirectory(), "logs.json"), shared: true,
                           restrictedToMinimumLevel: LogEventLevel.Warning);  // this means any log level below Warning will not be displayed on the file (Warning level and above are shown)

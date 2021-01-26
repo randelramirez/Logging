@@ -48,7 +48,7 @@ namespace Infrastructure.Middleware
 
             var innerExMessage = GetInnermostExceptionMessage(exception);
 
-            logger.LogError(exception, "ApiExceptionMiddleware!!! " + innerExMessage + " -- {ErrorId}.", error.Id);
+            logger.LogError(exception, "ApiExceptionMiddleware!!! " + innerExMessage + " -- ErrorId: {ErrorId}.", error.Id);
 
             var result = JsonConvert.SerializeObject(error);
             context.Response.ContentType = "application/json";
