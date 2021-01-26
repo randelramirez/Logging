@@ -122,8 +122,8 @@ namespace Persistence.Services
 
         public void ThrowSqlError()
         {
-            var x = this.context.Contacts.FromSqlRaw("EXECUTE dbo.FakeSP {0}", 1);
-            x.ToList(); // executes the command
+            var contacts = this.context.Contacts.FromSqlRaw("EXECUTE dbo.FakeSP {0}", 1);
+            contacts.ToList(); // executes the command
         }
     }
 }
